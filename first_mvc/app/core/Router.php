@@ -1,18 +1,23 @@
 <?php
-// Je vais créer les routes /product/... j'ai donc besoin
-// de controleur ProductController
 require_once(__DIR__."/../controllers/ProductController.php");
+require_once(__DIR__."/../controllers/HomeController.php");
+require_once(__DIR__."/../controllers/NotFoundController.php");
 
-class Router{
-    public static function getController(string $controllerName){
+class Router {
+    public static function getController(string $controllerName) {
+        if ($controllerName === null || $controllerName === '') {
+            throw new Error("Controller name is empty or null");
+        }
+
         switch ($controllerName) {
-            // Si la route est /product 
             case 'product':
-                // Je renvoi le controleur ProductController
                 return new ProductController();
-                break;
+            case '':
+                return new HomeController();
             default:
-                break;
+                // Si aucune route de match
+                return new NotFoundController();
         }
     }
 }
+?>
