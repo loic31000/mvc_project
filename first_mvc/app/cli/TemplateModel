@@ -1,0 +1,92 @@
+<?php
+/**
+ * 1. Complétez les requêtes SQL (...TODO...) selon votre table.
+ * 2. Les méthodes add et edit doivent être adaptées pour gérer les colonnes spécifiques à votre modèle.
+ */
+
+class [MODEL_NAME]Model {
+    private PDO $bdd;
+    private PDOStatement $add[MODEL_NAME];
+    private PDOStatement $del[MODEL_NAME];
+    private PDOStatement $get[MODEL_NAME];
+    private PDOStatement $get[MODEL_NAME]s;
+    private PDOStatement $edit[MODEL_NAME];
+
+    function __construct()
+    {
+        $this->bdd = new PDO("mysql:host=lamp-mysql;dbname=boutique", "root", "root");
+
+        // Adaptez ces requêtes à votre table [MODEL_NAME]
+        $this->add[MODEL_NAME] = $this->bdd->prepare("INSERT INTO ...TODO...");
+        $this->del[MODEL_NAME] = $this->bdd->prepare("DELETE FROM `[MODEL_NAME]` WHERE `id` = :id;");
+        $this->get[MODEL_NAME] = $this->bdd->prepare("SELECT * FROM `[MODEL_NAME]` WHERE `id` = :id;");
+        $this->edit[MODEL_NAME] = $this->bdd->prepare("UPDATE `[MODEL_NAME]` SET ...TODO... WHERE `id` = :id");
+        $this->get[MODEL_NAME]s = $this->bdd->prepare("SELECT * FROM `[MODEL_NAME]` LIMIT :limit");
+    }
+
+    public function add(...) : void {
+        // Bind your columns here
+        // $this->add[MODEL_NAME]->bindValue("col", $value);
+        $this->add[MODEL_NAME]->execute();
+    }
+
+    public function del(int $id) : void {
+        $this->del[MODEL_NAME]->bindValue("id", $id);
+        $this->del[MODEL_NAME]->execute();
+    }
+
+    public function get($id) : [MODEL_NAME]Entity | NULL {
+        $this->get[MODEL_NAME]->bindValue("id", $id, PDO::PARAM_INT);
+        $this->get[MODEL_NAME]->execute();
+        $raw[MODEL_NAME] = $this->get[MODEL_NAME]->fetch();
+
+        if (!$raw[MODEL_NAME]) {
+            return NULL;
+        }
+        return new [MODEL_NAME]Entity(
+            // $raw[MODEL_NAME]["column"]
+        );
+    }
+
+    public function getAll($limit = 50) : array {
+        $this->get[MODEL_NAME]s->bindValue("limit", $limit, PDO::PARAM_INT);
+        $this->get[MODEL_NAME]s->execute();
+        $raw[MODEL_NAME]s = $this->get[MODEL_NAME]s->fetchAll();
+
+        $[MODEL_NAME]EntityArray = [];
+        foreach ($raw[MODEL_NAME]s as $raw[MODEL_NAME]) {
+            $[MODEL_NAME]EntityArray[] = new [MODEL_NAME]Entity(
+                $raw[MODEL_NAME]["name"],
+                $raw[MODEL_NAME]["price"],
+                $raw[MODEL_NAME]["image"],
+                $raw[MODEL_NAME]["id"]
+            );
+        }
+        return $[MODEL_NAME]EntityArray;
+    }
+
+    public function edit(int $id, ...) : [MODEL_NAME]Entity | NULL {
+        $original[MODEL_NAME]Entity = $this->get($id);
+        if (!$original[MODEL_NAME]Entity) {
+            return NULL;
+        }
+        $this->edit[MODEL_NAME]->bindValue("id", $id, PDO::PARAM_INT);
+        // Bind other columns as needed
+        $this->edit[MODEL_NAME]->execute();
+        return $this->get($id);
+    }
+}
+
+class [MODEL_NAME]Entity {
+    private $id;
+    // other properties
+
+    function __construct($columns..., int $id = NULL) {
+        $this->id = $id;
+        // assign properties
+    }
+
+    public function getId() : int {
+        return $this->id;
+    }
+}
