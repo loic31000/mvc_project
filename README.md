@@ -28,6 +28,7 @@ Le projet contient :
 mvc_project/
 └── first_mvc/
     ├── app/
+    │   ├── cli/
     │   ├── controllers/
     │   ├── core/
     │   ├── models/
@@ -47,6 +48,33 @@ docker compose up --build
 ```
 
 L'application est exposée sur `http://localhost:8080` et phpMyAdmin sur `http://localhost:8081`.
+
+## CLI interne
+
+Le dossier `first_mvc/app/cli/` contient un petit générateur en ligne de commande.
+
+Depuis `first_mvc/` :
+
+```bash
+php app/cli/cli.php make-controller Admin
+php app/cli/cli.php make-model Admin
+```
+
+Commandes définies dans `cli.php` :
+
+- `make-controller <Nom>` : tente de créer `app/controllers/<Nom>Controller.php` à partir de `TemplateController` ;
+- `make-model <Nom>` : crée une base de modèle dans `app/models/<Nom>Model.php` à partir de `TemplateModel`.
+
+### État actuel du générateur
+
+Le générateur de modèle est bien prévu pour remplacer le placeholder `[MODEL_NAME]`, mais le template reste volontairement à compléter avec les colonnes et requêtes SQL du modèle.
+
+Le générateur de contrôleur présente actuellement deux incohérences dans le dépôt :
+
+- le fichier versionné s'appelle `TemplateController ` avec un espace final, alors que `cli.php` cherche `TemplateController` sans espace ;
+- le contenu du template utilise `Admin_Controller` et ne contient pas le placeholder `[CONTROLLER_NAME]` que `cli.php` tente de remplacer.
+
+La commande `make-controller` est donc documentée telle qu'elle existe dans le code, mais elle nécessite une correction avant d'être considérée comme fonctionnelle.
 
 ## Base de données
 
